@@ -2,7 +2,9 @@
   "name": "spheretalk",
   "version": "0.0.1",
   "dependencies": {
-    "express": "3.1.x"
+    "express": "3.1.x",
+    "mongodb": "1.1.11",
+    "util": "0.4.9"
   },
   "engines": {
     "node": "0.10.x",
