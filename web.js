@@ -8,6 +8,12 @@ var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb:/
 
 mongoose.connect(mongoUri);
 
+var gcmApiKey = '';
+models.Property.findOne({name: "gcmApiKey"}, function(err, property){
+  if(err);
+  gcmApiKey = property.value;  
+});
+
 app.use(express.bodyParser());
 
 app.post('/login', function(request, response) {
@@ -42,7 +48,7 @@ app.post('/login', function(request, response) {
       });
     } else if(users.length === 1) {
       if(users[0].gcmKey === gcmKey) {
-        models.User.update({gcmKey: gcmKey}, {username: username, geoLocation: geoLocation}).exec();
+        models.User.update({gcmKey: gcmKey}, {username: username, geoLocation: geoLocation, lastLogin: Date.now()}).exec();
         geo.findUsers(geoLocation, function(users) {
           loginResponse.users = users;
           response.send(loginResponse);
@@ -58,10 +64,36 @@ app.post('/login', function(request, response) {
   });
 });
 
-app.get('/find', function(request, response) {
-  models.User.findOne({username: "test"}, function(err,user) {
+app.get('/message', function(request, response) {
+  var messageResponse = {
+    status: "OK",
+    users: []
+  };
+
+  var gcmKey = request.body.gcmKey;
+  var geoLocation = request.body.geoLocation;
+  var message = request.body.message;
+
+  if(!message || !gcmKey) {
+    messageResponse.status = "NOT_OK";
+    response.send(messageResponse);
+    return;
+  }
+
+  models.User.findOne({gcmKey: gcmKey}, function(err, user){
     if(err);
-    response.send(user.geoLocation);
+    if(user) {
+      if(geoLocation) {
+        models.User.update({gcmKey: gcmKey}, {geoLocation: geoLocation}).exec();
+      } else {
+        geoLocation = user.geoLocation;
+      }
+      geo.messageUsers(geoLocation, message);
+
+    } else {
+      messageResponse.status = "NOT_OK";
+      response.send(messageResponse);
+    }
   });
 });
 

@@ -3,5 +3,5 @@ POST - /login
 	Response: {"status":"OK|NOT_OK|USERNAME_TAKEN", "users":[{"username":"user1"},{"username":"user2"}...]}
 
 POST - /message
-	Request: {"username":"username", "geoLocation":"location", "message": "message"}
+	Request: {"gcmKey":"key", "geoLocation":"location", "message": "message"}
 	Response: {"status":"OK|NOT_OK"}

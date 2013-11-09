@@ -5,4 +5,9 @@ function findUsers(geoLocation, callback) {
 	callback(users);
 }
 
-exports.findUsers = findUsers
+function messageUsers(geoLocation, message) {
+
+}
+
+exports.findUsers = findUsers;
+exports.messageUsers = messageUsers;
