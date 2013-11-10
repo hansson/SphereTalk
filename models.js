@@ -2,7 +2,8 @@ var mongoose = require('mongoose');
 
 var userSchema = mongoose.Schema({
   username: String,
-  geoLocation: String,
+  lon: Number,
+  lat: Number,
   gcmKey: String,
   lastLogin: {type: Date} 
 });

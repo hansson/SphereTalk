@@ -24,9 +24,10 @@ app.post('/login', function(request, response) {
 
   var username = request.body.username;
   var gcmKey = request.body.gcmKey;
-  var geoLocation = request.body.geoLocation;
+  var lon = request.body.lon;
+  var lat = request.body.lat;
 
-  if(!username || !gcmKey || !geoLocation) {
+  if(!username || !gcmKey || !lon || !lat) {
     loginResponse.status = "NOT_OK";
     response.send(loginResponse);
     return;
@@ -37,19 +38,20 @@ app.post('/login', function(request, response) {
     if(users.length === 0) {
       var newUser = new models.User({
         username: username,
-        geoLocation: geoLocation,
+        lon: lon,
+        lat: lat,
         gcmKey: gcmKey,
         lastLogin: Date.now()
       });
       newUser.save();
-      geo.findUsers(geoLocation, function(users) {
+      geo.findUsers(lon, lat, function(users) {
         loginResponse.users = users;
         response.send(loginResponse);
       });
     } else if(users.length === 1) {
       if(users[0].gcmKey === gcmKey) {
-        models.User.update({gcmKey: gcmKey}, {username: username, geoLocation: geoLocation, lastLogin: Date.now()}).exec();
-        geo.findUsers(geoLocation, function(users) {
+        models.User.update({gcmKey: gcmKey}, {username: username, lon: lon, lat: lat, lastLogin: Date.now()}).exec();
+        geo.findUsers(lon, lat, function(users) {
           loginResponse.users = users;
           response.send(loginResponse);
         });
@@ -70,8 +72,11 @@ app.get('/message', function(request, response) {
     users: []
   };
 
+  geo.messageUsers(54,54,"asdasd");
+
   var gcmKey = request.body.gcmKey;
-  var geoLocation = request.body.geoLocation;
+  var lon = request.body.lon;
+  var lat = request.body.lat;
   var message = request.body.message;
 
   if(!message || !gcmKey) {
@@ -83,12 +88,13 @@ app.get('/message', function(request, response) {
   models.User.findOne({gcmKey: gcmKey}, function(err, user){
     if(err);
     if(user) {
-      if(geoLocation) {
-        models.User.update({gcmKey: gcmKey}, {geoLocation: geoLocation}).exec();
+      if(lon && lat) {
+        models.User.update({gcmKey: gcmKey}, {lon: lon, lat: lat}).exec();
       } else {
-        geoLocation = user.geoLocation;
+        lon = user.lon
+        lat = user.lat
       }
-      geo.messageUsers(geoLocation, message);
+      geo.messageUsers(lon, lat, message);
 
     } else {
       messageResponse.status = "NOT_OK";
