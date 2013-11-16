@@ -5,3 +5,7 @@ POST - /login
 POST - /message
 	Request: {"gcmKey":"key", "lon":55.609096, "lat":13.000973, "message": "message"}
 	Response: {"status":"OK|NOT_OK"}
+	
+POST - /update-position
+	Request: {"gcmKey":"key", "lon":55.609096, "lat":13.000973}
+	Response: {"status":"OK|NOT_OK"}
