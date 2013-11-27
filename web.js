@@ -3,6 +3,8 @@ var app = express();
 var mongoose = require('mongoose');
 var models = require('./models');
 var geo = require('./geo');
+var gcm = require('./gcm-service');
+
 
 var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/spheretalk';
 
@@ -11,7 +13,10 @@ mongoose.connect(mongoUri);
 var gcmApiKey = '';
 models.Property.findOne({name: "gcmApiKey"}, function(err, property){
   if(err);
-  gcmApiKey = property.value;  
+  gcmApiKey = property.value;
+  var data = "TESTMESSAGE";
+  var regIds = [];
+  gcm.sendGCMMessage(data,regIds, gcmApiKey);
 });
 
 app.use(express.bodyParser());
@@ -94,7 +99,7 @@ app.get('/message', function(request, response) {
         lon = user.lon
         lat = user.lat
       }
-      geo.messageUsers(lon, lat, message);
+      geo.messageUsers(lon, lat, message, gcmApiKey);
 
     } else {
       messageResponse.status = "NOT_OK";
