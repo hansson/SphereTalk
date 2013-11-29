@@ -71,7 +71,7 @@ app.post('/login', function(request, response) {
   });
 });
 
-app.get('/message', function(request, response) {
+app.post('/message', function(request, response) {
   var messageResponse = {
     status: "OK",
     users: []
