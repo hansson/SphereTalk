@@ -77,14 +77,17 @@ app.get('/message', function(request, response) {
     users: []
   };
 
-  geo.messageUsers(54,54,"asdasd");
-
   var gcmKey = request.body.gcmKey;
   var lon = request.body.lon;
   var lat = request.body.lat;
   var message = request.body.message;
+  
+  console.log("IN MESSAGE");
 
   if(!message || !gcmKey) {
+    console.log("message or gcmkey missing");
+    console.log(message);
+    console.log(gcmKey);
     messageResponse.status = "NOT_OK";
     response.send(messageResponse);
     return;

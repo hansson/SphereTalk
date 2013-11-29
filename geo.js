@@ -25,9 +25,7 @@ function messageUsers(lon, lat, message, gcmApiKey) {
 	//Find a box for processing, we do  not want to check all users every time!
 	models.User.find({$and: [{ $and: [{lon: {$gt: minLon}}, {lon: {$lt: maxLon}}]},{$and: [{lat: {$gt: minLat}},{lat: {$lt: maxLat}}]}]}, function(err, users) {
 		var sendToUsers = [];
-		console.log('before loop');
 		for (var i = users.length - 1; i >= 0; i--) {
-			console.log('in loop' + i);
 			var userPosition = {
 				lon: users[i].lon,
 				lat: users[i].lat,
@@ -37,7 +35,6 @@ function messageUsers(lon, lat, message, gcmApiKey) {
 				sendToUsers.push(users[i].gcmKey);
 			}
 		}
-		console.log('after loop');
 		gcm.sendGCMMessage(message, sendToUsers, gcmApiKey);
 	});
 }
