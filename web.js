@@ -73,8 +73,7 @@ app.post('/login', function(request, response) {
 
 app.post('/message', function(request, response) {
   var messageResponse = {
-    status: "OK",
-    users: []
+    status: "OK"
   };
 
   var gcmKey = request.body.gcmKey;
@@ -108,12 +107,11 @@ app.post('/message', function(request, response) {
       console.log("before geo");
       geo.messageUsers(lon, lat, message, gcmApiKey);
       console.log("after geo");
-
     } else {
       console.log("not user");
       messageResponse.status = "NOT_OK";
-      response.send(messageResponse);
     }
+    response.send(messageResponse);
   });
 });
 
