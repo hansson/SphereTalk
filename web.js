@@ -98,12 +98,16 @@ app.post('/message', function(request, response) {
     if(user) {
       console.log("user");
       if(lon && lat) {
+        console.log("has lon lat");
         models.User.update({gcmKey: gcmKey}, {lon: lon, lat: lat}).exec();
       } else {
+        console.log("no lon lat");
         lon = user.lon;
         lat = user.lat;
       }
+      console.log("before geo");
       geo.messageUsers(lon, lat, message, gcmApiKey);
+      console.log("after geo");
 
     } else {
       console.log("not user");
