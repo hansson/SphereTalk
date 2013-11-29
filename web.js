@@ -97,6 +97,8 @@ app.get('/message', function(request, response) {
       geo.messageUsers(lon, lat, message);
 
     } else {
+      console.log("Could not find user");
+      console.log("gcm-key: " + gcmKey);
       messageResponse.status = "NOT_OK";
       response.send(messageResponse);
     }
