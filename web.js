@@ -82,12 +82,8 @@ app.post('/message', function(request, response) {
   var lat = request.body.lat;
   var message = request.body.message;
   
-  console.log("IN MESSAGE");
 
   if(!message || !gcmKey) {
-    console.log("message or gcmkey missing");
-    console.log(message);
-    console.log(gcmKey);
     messageResponse.status = "NOT_OK";
     response.send(messageResponse);
     return;
@@ -99,14 +95,12 @@ app.post('/message', function(request, response) {
       if(lon && lat) {
         models.User.update({gcmKey: gcmKey}, {lon: lon, lat: lat}).exec();
       } else {
-        lon = user.lon
-        lat = user.lat
+        lon = user.lon;
+        lat = user.lat;
       }
       geo.messageUsers(lon, lat, message, gcmApiKey);
 
     } else {
-      console.log("Could not find user");
-      console.log("gcm-key: " + gcmKey);
       messageResponse.status = "NOT_OK";
       response.send(messageResponse);
     }
