@@ -82,6 +82,7 @@ app.post('/message', function(request, response) {
   var lat = request.body.lat;
   var message = request.body.message;
   
+  console.log("Before check");
 
   if(!message || !gcmKey) {
     messageResponse.status = "NOT_OK";
@@ -89,9 +90,13 @@ app.post('/message', function(request, response) {
     return;
   }
 
+  console.log("after check");
+
   models.User.findOne({gcmKey: gcmKey}, function(err, user){
     if(err);
+    console.log("if user");
     if(user) {
+      console.log("user");
       if(lon && lat) {
         models.User.update({gcmKey: gcmKey}, {lon: lon, lat: lat}).exec();
       } else {
@@ -101,6 +106,7 @@ app.post('/message', function(request, response) {
       geo.messageUsers(lon, lat, message, gcmApiKey);
 
     } else {
+      console.log("not user");
       messageResponse.status = "NOT_OK";
       response.send(messageResponse);
     }
