@@ -35,6 +35,7 @@ function messageUsers(lon, lat, message, gcmApiKey) {
 				sendToUsers.push(users[i].gcmKey);
 			}
 		}
+		console.log("Sending to: " + sendToUsers);
 		gcm.sendGCMMessage(message, sendToUsers, gcmApiKey);
 	});
 }
