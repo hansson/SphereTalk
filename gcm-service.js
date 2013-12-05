@@ -11,7 +11,10 @@ function sendGCMMessage(data, regIds, gcmApiKey) {
         data: {data: data}
       } 
     },
-    function (error, response, body) {});
+    function (error, response, body) {
+      console.log("response: " + response);
+      console.log("body: " + body);
+    });
 }
 
 exports.sendGCMMessage = sendGCMMessage;
